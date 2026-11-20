@@ -1457,6 +1457,15 @@ describe("migrations", () => {
     check("ORG_MIGRATIONS", ORG_MIGRATIONS, ORG_MIGRATION_DIGESTS);
     check("CONTROL_MIGRATIONS", CONTROL_MIGRATIONS, CONTROL_MIGRATION_DIGESTS);
   });
+
+  it("rejects an edited shipped migration and an unpinned appended one", () => {
+    const edited = [...ORG_MIGRATIONS];
+    edited[0] = `${edited[0]} `;
+    expect(migrationDigests(edited)).not.toEqual(ORG_MIGRATION_DIGESTS);
+
+    const appended = [...CONTROL_MIGRATIONS, "CREATE TABLE later (id INTEGER);"];
+    expect(migrationDigests(appended)).not.toEqual(CONTROL_MIGRATION_DIGESTS);
+  });
 });
 
 describe("Db", () => {
