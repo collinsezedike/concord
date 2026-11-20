@@ -246,6 +246,11 @@ describe("Concord", () => {
     await expectPagedSync(1000, 2);
   });
 
+  it("keeps paging when a ledger fills more than one full page", async () => {
+    await expectPagedSync(1001, 2);
+    await expectPagedSync(2000, 3);
+  });
+
   it("rejects reconciliation when no register has been imported", async () => {
     await expect(concord.reconcile("FUND")).rejects.toThrow(new NotFound("no register imported for this asset"));
   });
